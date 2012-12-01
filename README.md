@@ -1,35 +1,23 @@
 # hearts
 
-FIXME: description
+Hearts in Clojure
 
 ## Installation
 
-Download from http://example.com/FIXME.
+Download from https://github.com/sparkjoy/hearts.
 
 ## Usage
 
-FIXME: explanation
+I'm using this project to explore Clojure. I've no idea what the usage model will look like just yet :-)
 
     $ java -jar hearts-0.1.0-standalone.jar [args]
 
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
 ### Bugs
 
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+It doesn't do anything yet? :-)
 
 ## License
 
-Copyright © 2012 FIXME
+Copyright © 2012 Wyecliff Associates, Inc.
 
 Distributed under the Eclipse Public License, the same as Clojure.
