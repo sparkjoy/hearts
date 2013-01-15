@@ -30,11 +30,14 @@
   (letfn [(player-cards [pos] (vec (take 13 (take-nth 4 (drop pos deck)))))]
     (vec (map player-cards (range 4)))))
 
-(defn -main
-  [& args]
-  (let [deck (shuffled-deck)
-	players (vec (for [dealt-cards (deal deck)]
+(defn make-game []
+  (vec (for [dealt-cards (deal (shuffled-deck))]
 		  {
 		   :dealt-cards dealt-cards
-		   :play-order [] }))]
-    println players))
+		   :play-order []
+		   })))
+
+(defn -main
+  [& args]
+  (def game (ref (make-game)))
+  println game)
