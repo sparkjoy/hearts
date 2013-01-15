@@ -1,11 +1,6 @@
 (ns hearts.core
   (:gen-class))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Welcome to Hearts in Clojure! I don't do much yet..."))
-
 (def queen-rank 11)
 (def queen-score 13)
 (def queen-of-spades {:suit :s, :rank queen-rank})
@@ -26,3 +21,17 @@
 	 :s (if (= queen-rank (:rank card)) queen-score 0)
 	 0))
 
+(defn shuffled-deck []
+  {:post [(= 52 (count %))]}
+  (shuffle (for [suit [:s :c :d :h] rank (range 0 13)] {:suit suit :rank rank})))
+
+(defn deal [deck]
+  {:post [(= 4 (count %))]}
+  (letfn [(player-cards [pos] (vec (take 13 (take-nth 4 (drop pos deck)))))]
+    (vec (map player-cards (range 4)))))
+
+(defn -main
+  [& args]
+  (let [deck (shuffled-deck)
+	players (deal deck)]
+    println players))
