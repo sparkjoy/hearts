@@ -40,4 +40,5 @@
 (defn -main
   [& args]
   (def game (ref (make-game)))
-  println game)
+  (doseq [player @game]
+    (println (:name player) "has" (count (filter #(= :h (:suit %)) (:dealt-cards player))) "hearts.")))
