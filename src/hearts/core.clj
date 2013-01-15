@@ -35,8 +35,7 @@
 	   :dealt-cards (-> (partition 13 deck) (nth pos) vec)
 	   :plays []
 	   })]
-    (make-player 0 "Alice")))
-;    (vec (map make-player (iterate inc 0) ["Alice" "Bob" "Mallory" "John"]))))
+    (vec (map make-player (iterate inc 0) ["Alice" "Bob" "Mallory" "John"]))))
 
 (defn -main
   [& args]
