@@ -25,17 +25,18 @@
   {:post [(= 52 (count %))]}
   (shuffle (for [suit [:s :c :d :h] rank (range 0 13)] {:suit suit :rank rank})))
 
-(defn deal [deck]
-  {:post [(= 4 (count %))]}
-  (letfn [(player-cards [pos] (vec (take 13 (take-nth 4 (drop pos deck)))))]
-    (vec (map player-cards (range 4)))))
-
 (defn make-game []
-  (vec (for [dealt-cards (deal (shuffled-deck))]
-		  {
-		   :dealt-cards dealt-cards
-		   :play-order []
-		   })))
+  (let [deck (shuffled-deck)
+	make-player
+	(fn [pos name]
+	  {
+	   :pos pos
+	   :name name
+	   :dealt-cards (-> (partition 13 deck) (nth pos) vec)
+	   :plays []
+	   })]
+    (make-player 0 "Alice")))
+;    (vec (map make-player (iterate inc 0) ["Alice" "Bob" "Mallory" "John"]))))
 
 (defn -main
   [& args]
