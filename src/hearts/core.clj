@@ -33,5 +33,8 @@
 (defn -main
   [& args]
   (let [deck (shuffled-deck)
-	players (deal deck)]
+	players (vec (for [dealt-cards (deal deck)]
+		  {
+		   :dealt-cards dealt-cards
+		   :play-order [] }))]
     println players))
