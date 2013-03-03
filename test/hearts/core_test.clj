@@ -2,6 +2,25 @@
   (:use clojure.test
         hearts.core))
 
+(deftest test-player-projection-for-john
+  (let [game {:players [{:name "Alice", :pos 0}
+                        {:name "Bob", :pos 1}
+                        {:name "Mallory", :pos 2}
+                        {:name "John", :pos 3, :dealt-cards [:card]}]
+              :tricks [[{:rank 9, :suit :c, :pos 2}]]}]
+    (is (= {:players [{:name "Alice"}
+                      {:name "Bob"}
+                      {:name "Mallory"}
+                      {:name "John", :dealt-cards [:card]}]
+            :tricks [[{:rank 9, :suit :c, :pos 2}]]}
+           (player-projection game 3)))))
+
+(deftest first-player-has-the-two-of-clubs
+  (let [players [{}
+                 {:name "Bob"
+                  :dealt-cards [two-of-clubs]}]]
+    (is (= "Bob" (:name (first-player players))))))
+
 (deftest cant-lead-with-heart-on-first-trick
   (with-redefs [playing-first-trick (constantly true)]
     (is (not (can-lead-with-heart nil)))))
@@ -28,34 +47,22 @@
 (deftest hearts-broken-when-one-played
   (is (hearts-broken [[{:suit :h}]])))
 
-(deftest pos-zero-plays-first
-  (is (zero? (next-player-pos {:tricks []}))))
-
-(deftest pos-one-plays-next
-  (is (= 1 (next-player-pos {:tricks [[{:suit :c}]]}))))
-
-(deftest pos-zero-plays-first-on-second-trick
-  (is (zero? (next-player-pos {:tricks [[{}{}{}{}]]}))))
-
-;(deftest next-player-pos-answers-nil-at-game-end
- ; (is (nil? (next-player-pos {:tricks (vec (repeat 13 [{}{}{}{}]))}))))
-
 (deftest led-suit-answers-first-suit-in-trick
   (is (= :c (led-suit [{:suit :c} {:suit :d}]))))
 
 (deftest highest-rank-in-led-suit-wins-trick
-  (is (= 1 (trick-winner [
-    {:suit :d :rank 4}
-    {:suit :d :rank 5}
-    {:suit :c :rank 6}
-    {:suit :s :rank 7}]))))
+  (is (= 3 (:pos (winning-card [
+    {:suit :d, :rank 4, :pos 2}
+    {:suit :d, :rank 5, :pos 3}
+    {:suit :c, :rank 6, :pos 0}
+    {:suit :s, :rank 7, :pos 1}])))))
 
 (deftest led-suit-wins-trick-if-nobody-else-plays-that-suit
-  (is (= 0 (trick-winner [
-    {:suit :h :rank 4}
-    {:suit :d :rank 5}
-    {:suit :c :rank 6}
-    {:suit :s :rank 7}]))))
+  (is (= 3 (:pos (winning-card [
+    {:suit :h, :rank 4, :pos 3}
+    {:suit :d, :rank 5, :pos 0}
+    {:suit :c, :rank 6, :pos 1}
+    {:suit :s, :rank 7, :pos 2}])))))
 
 (deftest card-score-is-one-for-a-heart
   (is (= 1 (card-score {:suit :h}))))

@@ -30,14 +30,15 @@
         style (ansi-styles suit)]
     (ansi/style (str (pretty-rank rank) pretty-suit) style)))
 
-(defn pretty-print-cards [cards]
+(defn format-hand [cards]
   (let [sorted-cards (sort-by (juxt :suit :rank) cards)]
-    (println (apply str (interpose " " (map pretty-card sorted-cards))))))
+    (apply str (interpose " " (map pretty-card sorted-cards)))))
 
 (defn -main [& args]
-  (let [cards (-> (new-game) :players first :dealt-cards)]
-    (pretty-print-cards cards)))
+  (let [game (new-game)
+        first-player-name (-> game :players first-player :name)]
+    (doseq [player (:players game)]
+      (println (:name player) (-> player :dealt-cards format-hand)))
+    (println first-player-name "plays first.")))
 
-    
-  
-  
+      
