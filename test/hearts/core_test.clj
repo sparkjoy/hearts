@@ -2,6 +2,17 @@
   (:use clojure.test
         hearts.core))
 
+(deftest next-player-at-start-holds-two-clubs
+  (with-redefs [first-player (constantly {:pos 2})]
+    (is (= 2 (next-player-pos {})))))
+
+(deftest next-player-after-lead-is-determined-by-pos-of-last-card-played
+  (is (= 2 (next-player-pos {:tricks [[{:pos 1}]]}))))
+
+(deftest next-player-to-lead-is-determined-by-winner-of-last-trick
+  (with-redefs [winning-card (constantly {:pos 3})]
+    (is (= 0 (next-player-pos {:tricks [[:card :card :card :card]]})))))
+
 (deftest test-player-projection-for-john
   (let [game {:players [{:name "Alice", :pos 0}
                         {:name "Bob", :pos 1}

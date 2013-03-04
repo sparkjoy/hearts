@@ -64,5 +64,21 @@
             player))
         players))
 
+(defn trick-in-play? [ts]
+  (when-let [last-trick (last ts)]
+    (let [num-cards-played (count last-trick)]
+      (and (> num-cards-played 0) (< num-cards-played 4)))))
+
+(defn next-player-pos [game]
+  (let [ts (:tricks game)]
+    (if (zero? (count ts))
+      (-> game first-player :pos)
+      (let [inc-player-pos #(mod (inc %) 4)
+            last-to-play-pos
+            (if-let [t (trick-in-play? ts)]
+              (-> ts last last :pos)
+              (-> ts last winning-card :pos))]
+        (inc-player-pos last-to-play-pos)))))
+
 (defn new-game []
   (-> (make-deck) shuffle make-game))
