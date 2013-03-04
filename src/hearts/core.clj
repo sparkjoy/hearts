@@ -44,16 +44,21 @@
     {:players (vec (map make-player (range) names))
      :tricks []}))
 
-(defn is-heart [card] (= :h (:suit card)))
+(defn is-heart [card]
+  "Returns card if a heart, otherwise nil"
+  (when (= :h (:suit card))
+    card))
 
-(defn hearts-broken [tricks]
-  (some #(some is-heart %) tricks))
-
-(defn playing-first-trick [tricks]
+(defn playing-first-trick? [tricks]
   (< (count (first tricks)) 4))
 
-(defn can-lead-with-heart [tricks]
-  (and ((complement playing-first-trick) tricks)
+(defn hearts-broken [tricks]
+  "Hearts are broken if a heart has been played"
+  (some #(some is-heart %) tricks))
+
+(defn can-lead-with-heart? [tricks]
+  "You can't lead with a heart on the first trick, or if a heart hasn't yet been played"
+  (and ((complement playing-first-trick?) tricks)
        (hearts-broken tricks)))
 
 (defn first-player [players]
@@ -65,11 +70,13 @@
         players))
 
 (defn trick-in-play? [ts]
+  "A trick is in play if someone has lead, but all cards have not yet been played"
   (when-let [last-trick (last ts)]
     (let [num-cards-played (count last-trick)]
       (and (> num-cards-played 0) (< num-cards-played 4)))))
 
 (defn next-player-pos [game]
+  "This determines who is up to play"
   (let [ts (:tricks game)]
     (if (zero? (count ts))
       (-> game first-player :pos)
@@ -81,4 +88,5 @@
         (inc-player-pos last-to-play-pos)))))
 
 (defn new-game []
+  "Shuffles a deck and deals a new set of cards to all four players"
   (-> (make-deck) shuffle make-game))

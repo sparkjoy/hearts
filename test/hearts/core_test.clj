@@ -33,24 +33,24 @@
     (is (= "Bob" (:name (first-player players))))))
 
 (deftest cant-lead-with-heart-on-first-trick
-  (with-redefs [playing-first-trick (constantly true)]
-    (is (not (can-lead-with-heart nil)))))
+  (with-redefs [playing-first-trick? (constantly true)]
+    (is (not (can-lead-with-heart? nil)))))
 
 (deftest cant-lead-with-heart-when-hearts-not-broken
-  (with-redefs [playing-first-trick (constantly false)
+  (with-redefs [playing-first-trick? (constantly false)
                 hearts-broken (constantly false)]
-    (is (not (can-lead-with-heart nil)))))
+    (is (not (can-lead-with-heart? nil)))))
 
 (deftest can-lead-with-hearts-once-hearts-broken-and-past-first-trick
-  (with-redefs [playing-first-trick (constantly false)
+  (with-redefs [playing-first-trick? (constantly false)
                 hearts-broken (constantly true)]
-    (is (can-lead-with-heart nil))))
+    (is (can-lead-with-heart? nil))))
 
 (deftest fourth-play-is-still-first-trick
-  (is (playing-first-trick [[:card :card :card]])))
+  (is (playing-first-trick? [[:card :card :card]])))
 
 (deftest fifth-play-is-no-longer-first-trick
-  (is (not (playing-first-trick [[:card :card :card :card]]))))
+  (is (not (playing-first-trick? [[:card :card :card :card]]))))
 
 (deftest hearts-not-broken-if-none-yet-played
   (is (not (hearts-broken [[{:suit :c}]]))))
