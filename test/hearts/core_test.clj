@@ -11,7 +11,7 @@
 
 (deftest next-player-to-lead-is-determined-by-winner-of-last-trick
   (with-redefs [winning-card (constantly {:pos 3})]
-    (is (= 0 (next-player-pos {:tricks [[:card :card :card :card]]})))))
+    (is (= 3 (next-player-pos {:tricks [[:card :card :card :card]]})))))
 
 (deftest test-player-projection-for-john
   (let [game {:players [{:name "Alice", :pos 0}

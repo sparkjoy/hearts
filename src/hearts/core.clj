@@ -94,11 +94,9 @@
   (let [ts (:tricks game)]
     (if (zero? (count ts))
       (-> game first-player :pos)
-      (let [inc-player-pos #(mod (inc %) 4)
-            last-to-play-pos (if-let [tip (trick-in-play ts)]
-                               (-> tip last :pos)
-                               (-> ts last winning-card :pos))]
-        (inc-player-pos last-to-play-pos)))))
+      (if-let [tip (trick-in-play ts)]
+        (mod (-> tip last :pos inc) 4)
+        (-> ts last winning-card :pos)))))
 
 (defn new-game 
   "Shuffles a deck and deals a new set of cards to all four players"
