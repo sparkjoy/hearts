@@ -2,7 +2,7 @@
   (:use clojure.test
         hearts.core))
 
-(deftest next-player-at-start-holds-two-clubs
+(deftest next-player-at-start-is-first-player
   (with-redefs [first-player (constantly {:pos 2})]
     (is (= 2 (next-player-pos {})))))
 
@@ -55,7 +55,7 @@
 (deftest hearts-not-broken-if-none-yet-played
   (is (not (hearts-broken [[{:suit :c}]]))))
 
-(deftest hearts-broken-when-one-played
+(deftest hearts-broken-once-heart-has-been-played
   (is (hearts-broken [[{:suit :h}]])))
 
 (deftest led-suit-answers-first-suit-in-trick
@@ -83,3 +83,13 @@
 
 (deftest card-score-for-queen-of-spades-is-thirteen
   (is (= 13 (card-score queen-of-spades))))
+
+(deftest play-card-adds-to-current-trick
+  (is (= {:tricks [[:card :new-card]]}
+         (play-card {:tricks [[:card]]} :new-card))))
+
+(deftest play-card-creates-new-tricks
+  (let [finished-trick [:card :card :card :card]]
+    (is (= {:tricks [finished-trick
+                     [:new-card]]}
+           (play-card {:tricks [finished-trick]} :new-card)))))
